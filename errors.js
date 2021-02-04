@@ -16,3 +16,7 @@ function confirmReportsLoaded(){
 function confirmReportsSync(){
   SpreadsheetApp.getUi().alert('Your reports updated to the latest version in your Google Drive account.')
 }
+
+function confirmHistoricSync(reportTitle){
+  SpreadsheetApp.getUi().alert(`Historic Data Updated. See sheet: ${reportTitle}.`);
+}

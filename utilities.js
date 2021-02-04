@@ -144,6 +144,33 @@ if(type === 'ADH'){
   
 }
 
+function testWriteReportNamesToSheet(){
+    const emailAttachments = getEmailAttachments().flat();
+    const names = emailAttachments.map(attachment => attachment.getName());
+    if(emailAttachments && emailAttachments.length > 0){
+      writeReportNamesToSheet(names);
+    }else{
+      console.log('No attachements found...')
+    }
+    
+}
 
+function writeReportNamesToSheet(reportNames){
+  
+  const troubleshooting = SpreadsheetApp.getActive().getSheetByName('Troubleshooting');
+  const headers = getHeaders('Troubleshooting');
+  const targetColumnNum = headers.indexOf('CURRENT REPORT NAMES') + 1;
+
+  const targetRange = troubleshooting.getRange(2,targetColumnNum, 3,1);
+  targetRange.clearContent();
+
+  reportNames.map((reportName,index) => {
+    const targetCell = targetRange.getCell(index + 1, 1);
+    targetCell.setValue(reportName);
+  })
+
+  
+  
+}
 
 

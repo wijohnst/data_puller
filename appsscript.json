@@ -1,15 +1,6 @@
 {
   "timeZone": "America/New_York",
-  "dependencies": {
-    "libraries": [
-      {
-        "userSymbol": "Tymeshift_Summary_Email_Client",
-        "version": "0",
-        "libraryId": "104KZmQXMArLd926byDOfxunm--sOElu7766TANZ22w_4F97MwZaN11bk",
-        "developmentMode": true
-      }
-    ]
-  },
   "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8"
+  "runtimeVersion": "V8",
+  "dependencies": {}
 }

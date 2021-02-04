@@ -51,13 +51,10 @@
                     Finally we call setValues on our range and write out CSV data to the target sheet
 
 */
-function test(){
-  Tymeshift_Summary_Email_Client.sendToDrive();
-}
 function populateSheets(){
 
     let reports = getReports();
-
+    
     reports.map(report => writeDataToSheet(report));
     confirmReportsSync();
 }
@@ -124,9 +121,5 @@ function getCsvData(fileId){
 
     return Utilities.parseCsv(file.getBlob().getDataAsString());
 }
-
-
-
-
 
 
