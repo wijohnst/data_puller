@@ -1,3 +1,5 @@
+// sendToDrive() is the main function for the email client and is called from a button click event in the spreadsheet
+
 function sendToDrive(){
   
   const emailAttachments = getEmailAttachments().flat();
@@ -6,6 +8,11 @@ function sendToDrive(){
   if(emailAttachments && emailAttachments.length > 0){
 
     writeReportNamesToSheet(names);
+      /*
+        writeReportNamesToSheet() writes data to the 'Troubleshooting' spreadsheet. This function provides the 
+        original file names for the current reports. Great for making sure your data source is accurate.
+      */
+
     emailAttachments.map((attachment,index) => {
 
       const reportType = getReportType(parseName(names[index]));
@@ -34,7 +41,6 @@ function getEmailAttachments(){
 }
 
 function parseName(attachmentName){
-  // console.log(attachmentName);
   const splitSubject = attachmentName.split('_');
   const startString = `${splitSubject[5]}/${splitSubject[6]}/${splitSubject[7]}:${splitSubject[8]}`;
   const endString = `${splitSubject[10]}/${splitSubject[11]}/${splitSubject[12]}:${splitSubject[13]}`;

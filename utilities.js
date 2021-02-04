@@ -1,16 +1,3 @@
-/* GET COLUMN DATA BY HEADING */
-
-function getColByHeading(targetSheet, targetHeading){
-
-  const [ headers ] = targetSheet.getRange(1,1,1,targetSheet.getLastColumn()).getValues(); 
-
-  const targetIndex = headers.findIndex(header => header === targetHeading);
-
-  const  targetData  = targetSheet.getRange(1,targetIndex + 1,targetSheet.getLastRow(),1).getValues(); 
-
-  return targetData;
-}
-
 /* GET SUMMARY REPORT AS 'sheet' CLASS*/
 
 function getSummaryReport(){
@@ -21,7 +8,21 @@ function getSummaryReport(){
 /* GET AN ARRAY OF UNTRACKED TIMES DURATIONS*/
 
 function getUntrackedTimes(targetSheet){
-  return getColByHeading(targetSheet,'UNTRACKED');
+
+  let untrackedTime;
+  const searchParam = 'UNTRACKED';
+
+  try{
+    untrackedTime = getColByHeading(targetSheet, searchParam)
+  }
+  catch(err){
+    throwAlert(getColHeadingErrorText(searchParam,targetSheet,"utilities.gs >> getUntrackedTimes()"));
+  }
+  finally{
+    console.log(handleGetColSuccess(searchParam,targetSheet));
+  }
+
+  return untrackedTime;
 }
 
 /* GET VALUES FROM HEADER ROW OF TARGET SHEET */
@@ -34,11 +35,32 @@ function getHeaders(targetSheetName){
 /*GET AN ARRAY OF WORKING TIMES DURATIONS */
 
 function getWorkingTimes(targetSheet){
-   return getColByHeading(targetSheet,'Working Time');
+  let workingTimes;
+  const searchParam = 'Working Time';
+
+  try{
+    workingTimes = getColByHeading(targetSheet, searchParam)
+  }
+  catch(err){
+    throwAlert(getColHeadingErrorText(searchParam,targetSheet,"utilities.gs >> getWorkingTimes()"));
+  }
+  finally{
+    console.log(handleGetColSuccess(searchParam,targetSheet));
+  }
+
+  return workingTimes;
 }
 
 function getTimesInGeneral(targetSheet){
-  return getColByHeading(targetSheet,'GENERAl TASKS').flat().filter(duration => duration !== 'GENERAl TASKS');
+  try{
+    return getColByHeading(targetSheet,'GENERAl TASKS').flat().filter(duration => duration !== 'GENERAl TASKS');
+  }
+  catch(err){
+    throwAlert(`System cannot find a column named 'GENERAl TASKS in the sheet '7 Day ADH Data'. If this query needs to be updated to match a new header name, please see utilities.gs >> getTimesInGeneral() and updated the query parameter in the try block.`)
+  }
+  finally{
+    console.log('Attemted to get % Time in General')
+  }
 }
 
 /* PARSE DURATIONS FOR CALCULATIONS */
@@ -58,10 +80,6 @@ function getGoogleDate(JSDate){
     return ((D.getTime() - epoch.getTime())/60000 - D.getTimezoneOffset())
 }
 
-function test(){
-  writeAdhOccToSheet()
-}
-
 /* ALLOWS YOU TO LOOK UP AND RETURN DATA FROM A COLUMN USING A HEADER STRING AS A KEY */
 
 function getColByHeading(targetSheet, targetHeading){
@@ -76,8 +94,8 @@ function getColByHeading(targetSheet, targetHeading){
   const [ headers ] = targetSheet.getRange(1,1,1,targetSheet.getLastColumn()).getValues();
   const targetIndex = headers.findIndex(header => header.trim() === targetHeading) + 1;
   const  targetData  = targetSheet.getRange(1,targetIndex,targetSheet.getLastRow(),1).getValues();
-
-  return targetData; 
+  return targetData
+  
 
   /* The 'first header' bug. For some reason, the only way to access the first header index with findIndex() is the re-write the first header. For an example, see datapuller.gs >> writeDataToSheet() >> sheetMin.setValue('Name'). I have literally no idea why. - 1/27/21 - WJ */
 }
@@ -87,13 +105,34 @@ function getColByHeading(targetSheet, targetHeading){
 function getActiveAgents(){
     
     const sheet = SpreadsheetApp.getActive();
-    const reportingData = sheet.getSheetByName('Reporting Data');
-    const [ headers ] = reportingData.getRange(1,1,1,reportingData.getLastColumn()).getValues(); //Returns the heading for each column in the Reporting Data spreadsheet
+    const targetSheet = sheet.getSheetByName('Reporting Data');
+    const [ headers ] = targetSheet.getRange(1,1,1,targetSheet.getLastColumn()).getValues(); //Returns the heading for each column in the Reporting Data spreadsheet
 
-    // const targetAgentsCol = headers.findIndex(header => header === 'Agent');
-    const isAgent = getColByHeading(reportingData,'Is Agent');
-    const allNames = getColByHeading(reportingData,'Agent')
+  let isAgent;
+  const searchParam = 'Is Agent';
 
+  try{
+    isAgent = getColByHeading(targetSheet, searchParam)
+  }
+  catch(err){
+    throwAlert(getColHeadingErrorText(searchParam,targetSheet.getSheetName(),"utilities.gs >> getActiveAgents() >> searchParam"));
+  }
+  finally{
+    console.log(handleGetColSuccess(searchParam,targetSheet.getSheetName()));
+  }
+
+  let allNames;
+  const namesSearchParam = 'Agent';
+
+  try{
+    allNames = getColByHeading(targetSheet, namesSearchParam)
+  }
+  catch(err){
+    throwAlert(getColHeadingErrorText(namesSearchParam,targetSheet.getSheetName(),"utilities.gs >> getActiveAgents() >> namesSearchParam"));
+  }
+  finally{
+    console.log(handleGetColSuccess(namesSearchParam,targetSheet.getSheetName()));
+  }
     
     const activeAgents = isAgent.map((bool,index) => {
       if(typeof bool[0] !== 'string' && bool[0] === true){
@@ -120,7 +159,7 @@ if(type === 'ADH'){
     },
     {
       sheetName: 'Month-to-Date ADH Data',
-      columnName: 'MONTH TO DATE ADHRENCE'
+      columnName: 'MONTH TO DATE ADHERENCE'
     }
   ]
 }else if(type === 'OCC'){
@@ -168,9 +207,10 @@ function writeReportNamesToSheet(reportNames){
     const targetCell = targetRange.getCell(index + 1, 1);
     targetCell.setValue(reportName);
   })
+}
 
-  
-  
+function getColHeadingErrorText(searchParam, targetSheet, path){
+  return `The system Cannot find column labled '${searchParam}' in the worksheet ${targetSheet}. If the search param needs to be updated please see ${path} and update the searchParam variable.`
 }
 
 

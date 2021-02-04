@@ -1,9 +1,20 @@
-function getPercentUntracked(sheetName){
-  // Logger.log(`Error Trace: @getPercentUntracked()`);
+function getPercentUntracked(){
   let sheet = SpreadsheetApp.getActive();
-  let targetSheet = sheet.getSheetByName(sheetName || '7 Day ADH Data');
-  
-  const agents = getColByHeading(targetSheet,'Name').flat().filter(name => name !== 'Name' && name !== ''); //THIS IS WHERE THE POPULATION ERROR HAPPENS. ERASE 'Name' from '7 Day ADH Data' sheet, retype 'Name' and run function again.
+  let targetSheet = '7 Day ADH Data';
+
+  let agents;
+  const searchParam = 'Name';
+
+  try{
+    agents = getColByHeading(targetSheet,searchParam).flat().filter(name => name !== searchParam && name !== '')
+  }
+  catch(err){
+    handleErrors({type: 'alert', errorText: getColHeadingErrorText('Name',targetSheet, "percentUntracked.gs >> getPercentUntracked()")})
+  }
+  finally{
+    handleGetColSuccess(searchParam,targetSheet);
+  }
+
 
   const workingTimes = parseTimes(getWorkingTimes(targetSheet).flat().filter(time => time !== 'Working Time'));
   const untrackedTimes = parseTimes(getUntrackedTimes(targetSheet).flat().filter(time => time !== 'UNTRACKED'));
