@@ -4,7 +4,7 @@ function getGeneralTimes(){
   const targetSheet = sheet.getSheetByName('7 Day ADH Data');
 
   const generalTasksArr = getTimesInGeneral(targetSheet);
-    let agents;
+  let agents;
 
   try{
     agents = getColByHeading(targetSheet,'Name').flat().filter(name => name !== "Name");
@@ -32,6 +32,8 @@ function getGeneralTimes(){
       } 
     }
   })
+
  return generalTimesArr;
+
 }
 

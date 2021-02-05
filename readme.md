@@ -147,5 +147,14 @@ The purpose of the Data Puller (and related scripts) is to:
 
             - Returns an array representing the % of time spent in general tasks for each active agent
             - Please note the strange spelling of 'GENERAl TASKS' in the heading on each of the Tymeshift Reports. This spelling, with a lowercase 'l' character must be referenced with this strict casing, unless a change is made on Tymeshift. In that case this function should be updated to index the correct spelling. 
-
+            
+            - ```parseTimes()```
+                - This function accepts an array of one or more date strings
+                -  returns an array of ```ParsedTime``` objects
+                - ```ParsedTime { time : Date, agentIndex : number}```
+                - Note that the Date object referenced by 'time' is returned from ```getGoogleDate()```
+                
+            - ```getGoogleDate()```
+                - This function accepts a JavaScript date object and returns a a new Date formatted correctly for Google Sheets
+ 
 

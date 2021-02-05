@@ -5,6 +5,10 @@ function getSummaryReport(){
   return sheet.getSheetByName('Summary Report');
 }
 
+function testUntracked(){
+  getUntrackedTimes('7 Day ADH Data')
+}
+
 /* GET AN ARRAY OF UNTRACKED TIMES DURATIONS*/
 
 function getUntrackedTimes(targetSheet){
@@ -19,7 +23,7 @@ function getUntrackedTimes(targetSheet){
     throwAlert(getColHeadingErrorText(searchParam,targetSheet,"utilities.gs >> getUntrackedTimes()"));
   }
   finally{
-    console.log(handleGetColSuccess(searchParam,targetSheet));
+    handleGetColSuccess(searchParam,targetSheet);
   }
 
   return untrackedTime;
@@ -45,22 +49,31 @@ function getWorkingTimes(targetSheet){
     throwAlert(getColHeadingErrorText(searchParam,targetSheet,"utilities.gs >> getWorkingTimes()"));
   }
   finally{
-    console.log(handleGetColSuccess(searchParam,targetSheet));
+    handleGetColSuccess(searchParam,targetSheet);
   }
 
   return workingTimes;
 }
 
+function testGeneralTimes(){
+  console.log(getTimesInGeneral('7 Day ADH Data'))
+}
+
 function getTimesInGeneral(targetSheet){
+
+  let generalTimes;
+  const searchParam = 'GENERAl TASKS'
   try{
-    return getColByHeading(targetSheet,'GENERAl TASKS').flat().filter(duration => duration !== 'GENERAl TASKS');
+    return getColByHeading(targetSheet,searchParam).flat().filter(duration => duration !== searchParam);
   }
   catch(err){
-    throwAlert(`System cannot find a column named 'GENERAl TASKS in the sheet '7 Day ADH Data'. If this query needs to be updated to match a new header name, please see utilities.gs >> getTimesInGeneral() and updated the query parameter in the try block.`)
+    throwAlert(getColHeadingErrorText(searchParam,targetSheet,"utilities.gs >> getTimesInGeneral()"));
   }
   finally{
-    console.log('Attemted to get % Time in General')
+    handleGetColSuccess(searchParam,targetSheet);
   }
+
+  return generalTimes;
 }
 
 /* PARSE DURATIONS FOR CALCULATIONS */
