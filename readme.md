@@ -157,4 +157,13 @@ The purpose of the Data Puller (and related scripts) is to:
             - ```getGoogleDate()```
                 - This function accepts a JavaScript date object and returns a a new Date formatted correctly for Google Sheets
  
+    - ```writeAdhOccToSheet()```
 
+        - This function writes the Adherence and Occupancy data from each Tymeshift report to the corresponding column in the Summary Report
+        - This function works by iterating over the ```routesArr``` array, and array containing one or more Routes objects
+        - ```Routes {routes : Route, dataTarget: string}```
+            - ```Route { sheetName: string, columnName: string}```
+
+        - ```writeReportToSheet()```
+            - This function accepts a Route object, queries data based on search parameters and writes that data to the Summary Report in the correct column
+            - 
